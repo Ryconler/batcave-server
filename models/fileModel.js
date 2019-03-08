@@ -28,6 +28,9 @@ class FileModel {
 
     static async getLimitFiles(offset, limit) {
         return await fileSeq.findAll({
+            where:{
+              private: '0'
+            },
             raw: true,
             order: [['create_date', 'DESC']],
             offset,
@@ -35,18 +38,41 @@ class FileModel {
         })
     }
 
-    static async getCountFilesByUid(uid) {
+    static async getCountPublicFilesByUid(uid) {
         return await fileSeq.count({
             where: {
-                uid
+                uid,
+                private: '0'
+            }
+        })
+    }
+    static async getCountPrivateFilesByUid(uid) {
+        return await fileSeq.count({
+            where: {
+                uid,
+                private: '1'
             }
         })
     }
 
-    static async getLimitFilesByUId(uid, offset, limit) {
+
+    static async getLimitPublicFilesByUId(uid, offset, limit) {
         return await fileSeq.findAll({
             where: {
-                uid
+                uid,
+                private: '0'
+            },
+            raw: true,
+            order: [['create_date', 'DESC']],
+            offset,
+            limit
+        })
+    }
+    static async getLimitPrivateFilesByUId(uid, offset, limit) {
+        return await fileSeq.findAll({
+            where: {
+                uid,
+                private: '1'
             },
             raw: true,
             order: [['create_date', 'DESC']],

@@ -81,7 +81,7 @@ class FileController {
         try {
             const result = await fileModel.getCountFiles()
             res.json({
-                num: result
+                count: result
             })
         } catch (e) {
             res.status(500)
@@ -120,13 +120,29 @@ class FileController {
         }
     }
 
-    static async getCountFilesByUid(req, res, next) {
+    static async getCountPublicFilesByUid(req, res, next) {
         try {
             const params = req.params
             if (params.uid) {
-                const result = await fileModel.getCountFilesByUid(params.uid)
+                const result = await fileModel.getCountPublicFilesByUid(params.uid)
                 res.json({
-                    num: result
+                    count: result
+                })
+            }
+        } catch (e) {
+            res.status(500)
+            res.json({
+                message: e.message
+            })
+        }
+    }
+    static async getCountPrivateFilesByUid(req, res, next) {
+        try {
+            const params = req.params
+            if (params.uid) {
+                const result = await fileModel.getCountPrivateFilesByUid(params.uid)
+                res.json({
+                    count: result
                 })
             }
         } catch (e) {
@@ -137,13 +153,42 @@ class FileController {
         }
     }
 
-    static async getLimitFilesByUid(req, res, next) {
+    static async getLimitPublicFilesByUid(req, res, next) {
         const limit = 5
         try {
             const query = req.query
             const params = req.params
             if (query.page && params.uid) {
-                const results = await fileModel.getLimitFilesByUId(params.uid, limit * (query.page - 1), limit)
+                const results = await fileModel.getLimitPublicFilesByUId(params.uid, limit * (query.page - 1), limit)
+                for(let result of results){
+                    result.owner = await userModel.getUserById(result.uid)
+                    delete result.owner.password
+                    delete result.owner.email
+                    delete result.owner.register_date
+                }
+                res.json({
+                    files: results
+                })
+            } else {
+                res.status(400)
+                    .json({
+                        message: '缺少参数'
+                    })
+            }
+        } catch (e) {
+            res.status(500)
+            res.json({
+                message: e.message
+            })
+        }
+    }
+    static async getLimitPrivateFilesByUid(req, res, next) {
+        const limit = 5
+        try {
+            const query = req.query
+            const params = req.params
+            if (query.page && params.uid) {
+                const results = await fileModel.getLimitPrivateFilesByUId(params.uid, limit * (query.page - 1), limit)
                 for(let result of results){
                     result.owner = await userModel.getUserById(result.uid)
                     delete result.owner.password

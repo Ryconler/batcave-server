@@ -79,7 +79,7 @@ class UserController {
         try {
             const result = await urlModel.getCountURLs()
             res.json({
-                num: result
+                count: result
             })
         } catch (e) {
             res.status(500)
@@ -124,7 +124,7 @@ class UserController {
             if (params.uid) {
                 const result = await urlModel.getCountURLsByUid(params.uid)
                 res.json({
-                    num: result
+                    count: result
                 })
             }
         } catch (e) {
@@ -136,6 +136,35 @@ class UserController {
     }
 
     static async getLimitURLsByUid(req, res, next) {
+        const limit = 10
+        try {
+            const query = req.query
+            const params = req.params
+            if (query.page && params.uid) {
+                const results = await urlModel.getLimitURLsByUId(params.uid, limit * (query.page - 1), limit)
+                for(let result of results){
+                    result.owner = await userModel.getUserById(result.uid)
+                    delete result.owner.password
+                    delete result.owner.email
+                    delete result.owner.register_date
+                }
+                res.json({
+                    urls: results
+                })
+            } else {
+                res.status(400)
+                    .json({
+                        message: '缺少参数'
+                    })
+            }
+        } catch (e) {
+            res.status(500)
+            res.json({
+                message: e.message
+            })
+        }
+    }
+    static async getLimit5URLsByUid(req, res, next) {
         const limit = 5
         try {
             const query = req.query
