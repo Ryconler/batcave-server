@@ -9,6 +9,23 @@ class FileController {
         try {
             const file = req.body
             if (file.title && file.type && file.private) {
+                switch (file.type) {
+                    case 'image':
+                        file.type = '图片'
+                        break
+                    case 'video':
+                        file.type = '视频'
+                        break
+                    case 'document':
+                        file.type = '文档'
+                        break
+                    case 'compress':
+                        file.type = '压缩包'
+                        break
+                    default:
+                        file.type = '其他'
+                        break
+                }
                 file.uid = req.session.user.id
                 file.location = req.files[0].filename
                 file.create_date = require('../utils/getNowTime')()

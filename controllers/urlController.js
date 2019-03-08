@@ -6,6 +6,23 @@ class UserController {
         try {
             const url = req.body
             if (url.title && url.content && url.type) {
+                switch (url.type) {
+                    case 'asset':
+                        url.type = '资源'
+                        break
+                    case 'video':
+                        url.type = '视频'
+                        break
+                    case 'learn':
+                        url.type = '教程'
+                        break
+                    case 'official':
+                        url.type = '官网'
+                        break
+                    default:
+                        url.type = '其他'
+                        break
+                }
                 url.uid = req.session.user.id
                 url.create_date = require('../utils/getNowTime')()
                 const result = await urlModel.createURL(url)
