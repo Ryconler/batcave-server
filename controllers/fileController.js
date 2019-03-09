@@ -10,8 +10,8 @@ class FileController {
                     case 'image':
                         file.type = '图片'
                         break
-                    case 'video':
-                        file.type = '视频'
+                    case 'setup':
+                        file.type = '安装包'
                         break
                     case 'document':
                         file.type = '文档'
