@@ -16,9 +16,6 @@ class URLModel {
 
     static async getHomeURLs() {
         return await urlSeq.findAll({
-            where:{
-                private: '0'
-            },
             raw: true,
             order: [['create_date', 'DESC']],
             limit: 5
