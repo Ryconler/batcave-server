@@ -9,6 +9,7 @@ module.exports = async function (req, res, next) {
         '/api/files/home',
         '/api/files/count',
         '/api/files/limit',
+        '/api/files/file',
         '/api/login',
         '/api/logout',
         '/api/register'
