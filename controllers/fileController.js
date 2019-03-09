@@ -1,6 +1,3 @@
-
-
-
 const fileModel = require('../models/fileModel')
 const userModel = require('../models/userModel')
 
@@ -177,12 +174,6 @@ class FileController {
             const params = req.params
             if (query.page && params.uid) {
                 const results = await fileModel.getLimitPublicFilesByUId(params.uid, limit * (query.page - 1), limit)
-                for(let result of results){
-                    result.owner = await userModel.getUserById(result.uid)
-                    delete result.owner.password
-                    delete result.owner.email
-                    delete result.owner.register_date
-                }
                 res.json({
                     files: results
                 })
@@ -206,12 +197,6 @@ class FileController {
             const params = req.params
             if (query.page && params.uid) {
                 const results = await fileModel.getLimitPrivateFilesByUId(params.uid, limit * (query.page - 1), limit)
-                for(let result of results){
-                    result.owner = await userModel.getUserById(result.uid)
-                    delete result.owner.password
-                    delete result.owner.email
-                    delete result.owner.register_date
-                }
                 res.json({
                     files: results
                 })

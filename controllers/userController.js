@@ -106,6 +106,22 @@ class UserController {
             })
         }
     }
+    static async changePassword(req,res,next){
+        const id = req.session.user.id
+        let {newPassword} = req.body
+        newPassword =await bcrypt.hash(newPassword, 10)  //加密的密码
+        try{
+            await userModel.changePassword(id,newPassword)
+            res.json({
+                message: '修改成功'
+            })
+        }catch (e) {
+            res.status(500)
+            res.json({
+                message: e.message
+            })
+        }
+    }
 }
 
 module.exports = UserController

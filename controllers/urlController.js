@@ -159,12 +159,6 @@ class UserController {
             const params = req.params
             if (query.page && params.uid) {
                 const results = await urlModel.getLimitURLsByUId(params.uid, limit * (query.page - 1), limit)
-                for(let result of results){
-                    result.owner = await userModel.getUserById(result.uid)
-                    delete result.owner.password
-                    delete result.owner.email
-                    delete result.owner.register_date
-                }
                 res.json({
                     urls: results
                 })
@@ -188,12 +182,6 @@ class UserController {
             const params = req.params
             if (query.page && params.uid) {
                 const results = await urlModel.getLimitURLsByUId(params.uid, limit * (query.page - 1), limit)
-                for(let result of results){
-                    result.owner = await userModel.getUserById(result.uid)
-                    delete result.owner.password
-                    delete result.owner.email
-                    delete result.owner.register_date
-                }
                 res.json({
                     urls: results
                 })

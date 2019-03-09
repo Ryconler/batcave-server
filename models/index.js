@@ -126,8 +126,8 @@ module.exports.like = sequelize.define('like', {
     }
 }, {tableName: 'like', timestamps: false});
 
-module.exports.Op = Sequelize.Op
 module.exports.sequelize = sequelize
+module.exports.Sequelize = Sequelize
 
 
 

@@ -23,7 +23,11 @@ class FileModel {
     }
 
     static async getCountFiles() {
-        return await fileSeq.count()
+        return await fileSeq.count({
+            where:{
+                private: '0'
+            }
+        })
     }
 
     static async getLimitFiles(offset, limit) {

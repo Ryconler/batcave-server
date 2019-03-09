@@ -4,12 +4,14 @@ const router = express.Router();
 const userCtrl = require('../controllers/userController')
 const urlCtrl = require('../controllers/urlController')
 const fileCtrl = require('../controllers/fileController')
+const likeCtrl = require('../controllers/likeController')
 
 
 router.get('/logstatus', userCtrl.getLogStatus);
 router.get('/logout', userCtrl.logout);
 router.post('/login', userCtrl.login);
 router.post('/register', userCtrl.register);
+router.put('/change-password', userCtrl.changePassword);
 
 router.get('/urls/url/:id', urlCtrl.getURLById);
 router.get('/urls/home', urlCtrl.getHomeURLs);
@@ -28,19 +30,16 @@ router.get('/files/public/count/:uid', fileCtrl.getCountPublicFilesByUid);
 router.get('/files/private/count/:uid', fileCtrl.getCountPrivateFilesByUid);
 router.get('/files/public/limit/:uid', fileCtrl.getLimitPublicFilesByUid);
 router.get('/files/private/limit/:uid', fileCtrl.getLimitPrivateFilesByUid);
-const multer  = require('multer')
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads')
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname)
-    }
-})
-const upload = multer({storage: storage})
-
+const upload = require('../middlewines/uploadMulter')
 router.post('/files/file',upload.any(), fileCtrl.createFile)
 
+router.get('/likes/urls/id',likeCtrl.getURLLikesIdByUId)
+router.get('/likes/files/id',likeCtrl.getFileLikesIdByUId)
+router.get('/likes/urls/limit',likeCtrl.getLimitURLLikesByUId)
+router.get('/likes/files/limit',likeCtrl.getLimitFileLikesByUId)
+router.post('/likes/like',likeCtrl.createLike)
+router.delete('/likes/unlike/url/:rid',likeCtrl.unlikeURL)
+router.delete('/likes/unlike/file/:fid',likeCtrl.unlikeFile)
 
-module.exports
-    = router;
+
+module.exports = router;

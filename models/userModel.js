@@ -4,6 +4,15 @@ class UserModel {
     static async createUser(user) {
         return await userSeq.create(user)
     }
+    static async changePassword(id,newPassword) {
+        return await userSeq.update({
+            password: newPassword
+        },{
+            where:{
+                id
+            }
+        })
+    }
     static async getUserById(id){
         return await userSeq.findOne({
             where: {
