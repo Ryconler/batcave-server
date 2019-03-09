@@ -16,9 +16,13 @@ class FileModel {
 
     static async getHomeFiles() {
         return await fileSeq.findAll({
+            where:{
+                private: '0'
+            },
             raw: true,
             order: [['create_date', 'DESC']],
             limit: 5
+
         })
     }
 
