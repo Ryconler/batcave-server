@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 const userModel = require('../models/userModel')
 
 class UserController {
-    static async getLogStatus(req,res,next){
+    static async checkLog(req,res,next){
         const user = req.session.user
         if(user){
             res.json({
@@ -21,12 +21,14 @@ class UserController {
                                 user
                             })
                         } else {  // cookie中的 密码错误
-                            res.json({
+                            res.status(403)
+                                .json({
                                     message: 'cookie密码错误'
                                 })
                         }
                     } else {
-                        res.json({
+                        res.status(403)
+                            .json({
                                 message: 'cookie用户名不存在'
                             })
                     }
@@ -37,7 +39,8 @@ class UserController {
                     })
                 }
             } else {  // 没有cookie
-                res.json({
+                res.status(403)
+                    .json({
                         message: '没有cookie'
                     })
             }
@@ -92,8 +95,8 @@ class UserController {
                         message: '用户名已存在'
                     })
             }else {
-                await userModel.createUser(user)
-                req.session.user = user
+                const newUser = await userModel.createUser(user)
+                req.session.user = newUser
                 res.json({
                     user,
                     message: '注册成功'

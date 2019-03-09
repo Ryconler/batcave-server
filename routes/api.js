@@ -7,7 +7,7 @@ const fileCtrl = require('../controllers/fileController')
 const likeCtrl = require('../controllers/likeController')
 
 
-router.get('/logstatus', userCtrl.getLogStatus);
+router.get('/checkLog', userCtrl.checkLog);
 router.get('/logout', userCtrl.logout);
 router.post('/login', userCtrl.login);
 router.post('/register', userCtrl.register);
