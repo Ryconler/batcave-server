@@ -25,7 +25,6 @@ class URLModel {
     static async getCountURLs() {
         return await urlSeq.count()
     }
-
     static async getLimitURLs(offset, limit) {
         return await urlSeq.findAll({
             raw: true,
@@ -35,7 +34,7 @@ class URLModel {
         })
     }
 
-    static async getCountURLsByUid(uid) {
+    static async getURLsCountByUId(uid) {
         return await urlSeq.count({
             where: {
                 uid

@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs')
 const userModel = require('../models/userModel')
 module.exports = async function (req, res, next) {
     const noAuth = [
-        '/api/logstatus',
+        '/api/checkLog',
         '/api/urls/home',
         '/api/urls/count',
         '/api/urls/limit',

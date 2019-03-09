@@ -135,15 +135,12 @@ class UserController {
         }
     }
 
-    static async getCountURLsByUid(req, res, next) {
+    static async getMyURLsCount(req, res, next) {
         try {
-            const params = req.params
-            if (params.uid) {
-                const result = await urlModel.getCountURLsByUid(params.uid)
-                res.json({
-                    count: result
-                })
-            }
+            const result = await urlModel.getURLsCountByUId(req.session.user.id)
+            res.json({
+                count: result
+            })
         } catch (e) {
             res.status(500)
             res.json({
@@ -152,8 +149,30 @@ class UserController {
         }
     }
 
-    static async getLimitURLsByUid(req, res, next) {
+    static async getMyLimitURLs(req, res, next) {
         const limit = 10
+        try {
+            const query = req.query
+            if (query.page) {
+                const results = await urlModel.getLimitURLsByUId(req.session.user.id, limit * (query.page - 1), limit)
+                res.json({
+                    urls: results
+                })
+            } else {
+                res.status(400)
+                    .json({
+                        message: '缺少参数'
+                    })
+            }
+        } catch (e) {
+            res.status(500)
+            res.json({
+                message: e.message
+            })
+        }
+    }
+    static async getOtherLimitURLs(req, res, next) {
+        const limit = 5
         try {
             const query = req.query
             const params = req.params
@@ -175,17 +194,15 @@ class UserController {
             })
         }
     }
-    static async getLimit5URLsByUid(req, res, next) {
-        const limit = 5
+    static async getOtherURLsCount(req, res, next) {
         try {
-            const query = req.query
             const params = req.params
-            if (query.page && params.uid) {
-                const results = await urlModel.getLimitURLsByUId(params.uid, limit * (query.page - 1), limit)
+            if(params.uid){
+                const result = await urlModel.getURLsCountByUId(params.uid)
                 res.json({
-                    urls: results
+                    count: result
                 })
-            } else {
+            }else {
                 res.status(400)
                     .json({
                         message: '缺少参数'

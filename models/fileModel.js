@@ -46,7 +46,7 @@ class FileModel {
         })
     }
 
-    static async getCountPublicFilesByUid(uid) {
+    static async getPublicFilesCount(uid) {
         return await fileSeq.count({
             where: {
                 uid,
@@ -54,7 +54,7 @@ class FileModel {
             }
         })
     }
-    static async getCountPrivateFilesByUid(uid) {
+    static async getPrivateFilesCount(uid) {
         return await fileSeq.count({
             where: {
                 uid,
@@ -62,9 +62,7 @@ class FileModel {
             }
         })
     }
-
-
-    static async getLimitPublicFilesByUId(uid, offset, limit) {
+    static async getPublicLimitFiles(uid, offset, limit) {
         return await fileSeq.findAll({
             where: {
                 uid,
@@ -76,7 +74,7 @@ class FileModel {
             limit
         })
     }
-    static async getLimitPrivateFilesByUId(uid, offset, limit) {
+    static async getPrivateLimitFiles(uid, offset, limit) {
         return await fileSeq.findAll({
             where: {
                 uid,
@@ -88,6 +86,7 @@ class FileModel {
             limit
         })
     }
+
 }
 
 module.exports = FileModel

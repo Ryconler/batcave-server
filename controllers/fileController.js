@@ -134,15 +134,12 @@ class FileController {
         }
     }
 
-    static async getCountPublicFilesByUid(req, res, next) {
+    static async getMyPublicFilesCount(req, res, next) {
         try {
-            const params = req.params
-            if (params.uid) {
-                const result = await fileModel.getCountPublicFilesByUid(params.uid)
-                res.json({
-                    count: result
-                })
-            }
+            const result = await fileModel.getPublicFilesCount(req.session.user.id)
+            res.json({
+                count: result
+            })
         } catch (e) {
             res.status(500)
             res.json({
@@ -150,15 +147,12 @@ class FileController {
             })
         }
     }
-    static async getCountPrivateFilesByUid(req, res, next) {
+    static async getMyPrivateFilesCount(req, res, next) {
         try {
-            const params = req.params
-            if (params.uid) {
-                const result = await fileModel.getCountPrivateFilesByUid(params.uid)
-                res.json({
-                    count: result
-                })
-            }
+            const result = await fileModel.getPrivateFilesCount(req.session.user.id)
+            res.json({
+                count: result
+            })
         } catch (e) {
             res.status(500)
             res.json({
@@ -166,14 +160,12 @@ class FileController {
             })
         }
     }
-
-    static async getLimitPublicFilesByUid(req, res, next) {
+    static async getMyPublicLimitFiles(req, res, next) {
         const limit = 5
         try {
             const query = req.query
-            const params = req.params
-            if (query.page && params.uid) {
-                const results = await fileModel.getLimitPublicFilesByUId(params.uid, limit * (query.page - 1), limit)
+            if (query.page) {
+                const results = await fileModel.getPublicLimitFiles(req.session.user.id, limit * (query.page - 1), limit)
                 res.json({
                     files: results
                 })
@@ -190,15 +182,58 @@ class FileController {
             })
         }
     }
-    static async getLimitPrivateFilesByUid(req, res, next) {
+    static async getMyPrivateLimitFiles(req, res, next) {
+        const limit = 5
+        try {
+            const query = req.query
+            if (query.page) {
+                const results = await fileModel.getPrivateLimitFiles(req.session.user.id, limit * (query.page - 1), limit)
+                res.json({
+                    files: results
+                })
+            } else {
+                res.status(400)
+                    .json({
+                        message: '缺少参数'
+                    })
+            }
+        } catch (e) {
+            res.status(500)
+            res.json({
+                message: e.message
+            })
+        }
+    }
+    static async getOtherPublicLimitFiles(req, res, next) {
         const limit = 5
         try {
             const query = req.query
             const params = req.params
             if (query.page && params.uid) {
-                const results = await fileModel.getLimitPrivateFilesByUId(params.uid, limit * (query.page - 1), limit)
+                const results = await fileModel.getPublicLimitFiles(params.uid, limit * (query.page - 1), limit)
                 res.json({
                     files: results
+                })
+            } else {
+                res.status(400)
+                    .json({
+                        message: '缺少参数'
+                    })
+            }
+        } catch (e) {
+            res.status(500)
+            res.json({
+                message: e.message
+            })
+        }
+    }
+    static async getOtherPublicFilesCount(req, res, next) {
+        try {
+            const params = req.params
+            if (params.uid) {
+                const result = await fileModel.getPublicFilesCount(params.uid)
+                res.json({
+                    count: result
                 })
             } else {
                 res.status(400)
