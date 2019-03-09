@@ -9,13 +9,12 @@ module.exports = async function (req, res, next) {
         '/api/files/home',
         '/api/files/count',
         '/api/files/limit',
-        '/api/files/file',
         '/api/login',
         '/api/logout',
         '/api/register'
     ]; // 不需要登录认证的路由
 
-    if (noAuth.indexOf(req.path) !== -1) {  // 直接访问不需要认证的路由
+    if (req.path.indexOf('/api/files/file/') !== -1 || noAuth.indexOf(req.path) !== -1) {  // 直接访问不需要认证的路由
         await next()
     } else {  // 访问需要认证的路由
         if (req.session.user) {  // 已登录
