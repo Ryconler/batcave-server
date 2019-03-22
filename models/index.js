@@ -28,6 +28,10 @@ module.exports.user = sequelize.define('user', {
         type: Sequelize.STRING(255),
         allowNull: false
     },
+    tmp_password: {
+        type: Sequelize.STRING(255),
+        allowNull: true
+    },
     email: {
         type: Sequelize.STRING(255),
         allowNull: false

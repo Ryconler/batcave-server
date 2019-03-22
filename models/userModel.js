@@ -13,6 +13,15 @@ class UserModel {
             }
         })
     }
+    static async changeTmpPassword(id,newTmpPsw) {
+        return await userSeq.update({
+            tmp_password: newTmpPsw
+        },{
+            where:{
+                id
+            }
+        })
+    }
     static async getUserById(id){
         return await userSeq.findOne({
             where: {

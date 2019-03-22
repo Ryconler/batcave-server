@@ -3,6 +3,7 @@ const userModel = require('../models/userModel')
 module.exports = async function (req, res, next) {
     const noAuth = [
         '/api/checkLog',
+        '/api/sendTmpPsw',
         '/api/urls/home',
         '/api/urls/count',
         '/api/urls/limit',

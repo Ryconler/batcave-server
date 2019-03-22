@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs')
 
 const userModel = require('../models/userModel')
 
+let t
+
 class UserController {
     static async checkLog(req,res,next){
         const user = req.session.user
@@ -21,14 +23,12 @@ class UserController {
                                 user
                             })
                         } else {  // cookie中的 密码错误
-                            res.status(403)
-                                .json({
+                            res.json({
                                     message: 'cookie密码错误'
                                 })
                         }
                     } else {
-                        res.status(403)
-                            .json({
+                        res.json({
                                 message: 'cookie用户名不存在'
                             })
                     }
@@ -39,8 +39,7 @@ class UserController {
                     })
                 }
             } else {  // 没有cookie
-                res.status(403)
-                    .json({
+                res.json({
                         message: '没有cookie'
                     })
             }
@@ -51,7 +50,8 @@ class UserController {
             const user = await userModel.getUserByUsername(req.body.username)
             if(user){  // 先检测用户是否存在
                 const password = user.password
-                if (await bcrypt.compare(req.body.password, password)) {  //验证密码
+                const tmp_password = user.tmp_password||''
+                if (await bcrypt.compare(req.body.password, password)||await bcrypt.compare(req.body.password, tmp_password)) {  //验证密码
                     // 设置session
                     req.session.user = user
                     res.json({
@@ -83,6 +83,37 @@ class UserController {
             user: req.session.user,
             message: '账号已退出'
         })
+    }
+    static async sendTmpPsw(req,res){
+        try{
+            const user = await userModel.getUserByUsername(req.body.username)
+            if(user){  // 先检测用户是否存在
+                const tmp_password = require('../utils/getRandomPassword')()
+                const hash = await bcrypt.hash(tmp_password, 10)
+                await userModel.changeTmpPassword(user.id,hash)
+                clearTimeout(t)
+                t = setTimeout(async function () {  // 三分钟后清除临时密码
+                    await userModel.changeTmpPassword(user.id,'')
+                },1000*60*3)
+                let sendEmail=require('../utils/sendEmail')
+                sendEmail(user.email, tmp_password,function (result) {
+                    res.json({
+                        message: result
+                    })
+                })
+            }else {
+                res.status(403)
+                    .json({
+                        message: '用户名不存在'
+                    })
+            }
+        }catch (e) {
+            console.log(e.message);
+            res.status(500)
+            res.json({
+                message: e.message
+            })
+        }
     }
     static async register(req,res,next){
         const user = req.body

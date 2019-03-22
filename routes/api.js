@@ -9,6 +9,7 @@ const likeCtrl = require('../controllers/likeController')
 
 router.get('/checkLog', userCtrl.checkLog);
 router.get('/logout', userCtrl.logout);
+router.post('/sendTmpPsw', userCtrl.sendTmpPsw);
 router.post('/login', userCtrl.login);
 router.post('/register', userCtrl.register);
 router.put('/change-password', userCtrl.changePassword);
