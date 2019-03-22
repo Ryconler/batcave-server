@@ -50,19 +50,49 @@ class FileController {
             const params = req.params
             if (params.id) {
                 let file = await fileModel.getFileById(params.id)
-                file.owner = await userModel.getUserById(file.uid)
-                if (file.private === '1' &&  (!req.session.user || file.uid !== req.session.user.id)) {
+                if (!file || (file.private === '1' && (!req.session.user || file.uid !== req.session.user.id))) {
                     res.status(403)
                         .json({
                             message: '你无权查看此文件'
                         })
                 }else {
+                    file.owner = await userModel.getUserById(file.uid)
                     delete file.owner.password
                     delete file.owner.email
                     delete file.owner.register_date
                     res.json({
                         file
                     })
+                }
+            } else {
+                res.status(400)
+                    .json({
+                        message: '缺少字段'
+                    })
+            }
+        } catch (e) {
+            res.status(500)
+            res.json({
+                message: e.message
+            })
+        }
+    }
+
+    static async deleteFileById(req, res, next) {
+        try {
+            const params = req.params
+            if (params.id) {
+                const file = await fileModel.getFileById(params.id)
+                if(req.session.user && file.uid === req.session.user.id){
+                    await fileModel.deleteFileById(params.id)
+                    res.json({
+                        message: '删除成功'
+                    })
+                }else {
+                    res.status(403)
+                        .json({
+                            message: '没有权限'
+                        })
                 }
             } else {
                 res.status(400)

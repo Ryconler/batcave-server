@@ -14,6 +14,13 @@ class URLModel {
         })
     }
 
+    static async deleteURLById(id){
+        return await urlSeq.destroy({
+            where: {
+                id
+            }
+        })
+    }
     static async getHomeURLs() {
         return await urlSeq.findAll({
             raw: true,

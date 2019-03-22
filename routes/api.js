@@ -23,6 +23,7 @@ router.get('/urls/my/limit', urlCtrl.getMyLimitURLs);
 router.get('/urls/other/limit/:uid', urlCtrl.getOtherLimitURLs);
 router.get('/urls/other/count/:uid', urlCtrl.getOtherURLsCount);
 router.post('/urls/url', urlCtrl.createURL)
+router.delete('/urls/url/:id', urlCtrl.deleteURLById);
 
 router.get('/files/file/:id', fileCtrl.getFileById);
 router.get('/files/home', fileCtrl.getHomeFiles);
@@ -36,6 +37,8 @@ router.get('/files/other/public/limit/:uid', fileCtrl.getOtherPublicLimitFiles);
 router.get('/files/other/public/count/:uid', fileCtrl.getOtherPublicFilesCount);
 const upload = require('../middlewines/uploadMulter')
 router.post('/files/file',upload.any(), fileCtrl.createFile)
+router.delete('/files/file/:id', fileCtrl.deleteFileById);
+
 
 router.get('/likes/urls/id',likeCtrl.getURLLikesIdByUId)
 router.get('/likes/files/id',likeCtrl.getFileLikesIdByUId)

@@ -14,6 +14,14 @@ class FileModel {
         })
     }
 
+    static async deleteFileById(id){
+        return await fileSeq.destroy({
+            where: {
+                id
+            }
+        })
+    }
+
     static async getHomeFiles() {
         return await fileSeq.findAll({
             where:{

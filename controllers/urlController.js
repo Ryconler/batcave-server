@@ -72,6 +72,36 @@ class UserController {
         }
     }
 
+    static async deleteURLById(req, res, next) {
+        try {
+            const params = req.params
+            if (params.id) {
+                const url = await urlModel.getURLById(params.id)
+                if(req.session.user && url.uid === req.session.user.id){
+                    await urlModel.deleteURLById(params.id)
+                    res.json({
+                        message: '删除成功'
+                    })
+                }else {
+                    res.status(403)
+                        .json({
+                            message: '没有权限'
+                        })
+                }
+            } else {
+                res.status(400)
+                    .json({
+                        message: '缺少字段'
+                    })
+            }
+        } catch (e) {
+            res.status(500)
+            res.json({
+                message: e.message
+            })
+        }
+    }
+
     static async getHomeURLs(req, res, next) {
         try {
             const results = await urlModel.getHomeURLs()
