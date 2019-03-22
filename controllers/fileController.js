@@ -49,14 +49,21 @@ class FileController {
         try {
             const params = req.params
             if (params.id) {
-                const result = await fileModel.getFileById(params.id)
-                result.owner = await userModel.getUserById(result.uid)
-                delete result.owner.password
-                delete result.owner.email
-                delete result.owner.register_date
-                res.json({
-                    file: result
-                })
+                let file = await fileModel.getFileById(params.id)
+                file.owner = await userModel.getUserById(file.uid)
+                if (file.private === '1' &&  (!req.session.user || file.uid !== req.session.user.id)) {
+                    res.status(403)
+                        .json({
+                            message: '你无权查看此文件'
+                        })
+                }else {
+                    delete file.owner.password
+                    delete file.owner.email
+                    delete file.owner.register_date
+                    res.json({
+                        file
+                    })
+                }
             } else {
                 res.status(400)
                     .json({
@@ -71,10 +78,10 @@ class FileController {
         }
     }
 
-    static async getHomeFiles(req, res, next){
+    static async getHomeFiles(req, res, next) {
         try {
             const results = await fileModel.getHomeFiles()
-            for(let result of results){
+            for (let result of results) {
                 result.owner = await userModel.getUserById(result.uid)
                 delete result.owner.password
                 delete result.owner.email
@@ -111,7 +118,7 @@ class FileController {
             const query = req.query
             if (query.page) {
                 const results = await fileModel.getLimitFiles(limit * (query.page - 1), limit)
-                for(let result of results){
+                for (let result of results) {
                     result.owner = await userModel.getUserById(result.uid)
                     delete result.owner.password
                     delete result.owner.email
@@ -147,6 +154,7 @@ class FileController {
             })
         }
     }
+
     static async getMyPrivateFilesCount(req, res, next) {
         try {
             const result = await fileModel.getPrivateFilesCount(req.session.user.id)
@@ -160,6 +168,7 @@ class FileController {
             })
         }
     }
+
     static async getMyPublicLimitFiles(req, res, next) {
         const limit = 5
         try {
@@ -182,6 +191,7 @@ class FileController {
             })
         }
     }
+
     static async getMyPrivateLimitFiles(req, res, next) {
         const limit = 5
         try {
@@ -204,6 +214,7 @@ class FileController {
             })
         }
     }
+
     static async getOtherPublicLimitFiles(req, res, next) {
         const limit = 5
         try {
@@ -227,6 +238,7 @@ class FileController {
             })
         }
     }
+
     static async getOtherPublicFilesCount(req, res, next) {
         try {
             const params = req.params
