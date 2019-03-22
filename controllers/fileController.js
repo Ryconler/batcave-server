@@ -1,3 +1,5 @@
+const fs = require('fs')
+const path = require('path');
 const fileModel = require('../models/fileModel')
 const userModel = require('../models/userModel')
 
@@ -85,6 +87,12 @@ class FileController {
                 const file = await fileModel.getFileById(params.id)
                 if(req.session.user && file.uid === req.session.user.id){
                     await fileModel.deleteFileById(params.id)
+                    fs.unlink(path.join(__dirname,'../uploads',file.location),function(error){
+                        if(error){
+                            console.log(error);
+                            return false;
+                        }
+                    })
                     res.json({
                         message: '删除成功'
                     })
