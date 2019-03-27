@@ -40,7 +40,6 @@ const upload = require('../middlewines/uploadMulter')
 router.post('/files/file',upload.any(), fileCtrl.createFile)
 router.delete('/files/file/:id', fileCtrl.deleteFileById);
 
-
 router.get('/likes/urls/id',likeCtrl.getURLLikesIdByUId)
 router.get('/likes/files/id',likeCtrl.getFileLikesIdByUId)
 router.get('/likes/urls/limit',likeCtrl.getLimitURLLikesByUId)
