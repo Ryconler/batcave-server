@@ -129,6 +129,26 @@ module.exports.like = sequelize.define('like', {
         allowNull: false
     }
 }, {tableName: 'like', timestamps: false});
+module.exports.record = sequelize.define('record', {
+    id: {
+        type: Sequelize.INTEGER(11),
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    content:{
+        type: Sequelize.STRING(255),
+        allowNull: false
+    },
+    username: {
+        type: Sequelize.STRING(20),
+        allowNull: false
+    },
+    create_date: {
+        type: Sequelize.STRING(20),
+        allowNull: false
+    }
+}, {tableName: 'record', timestamps: false});
 
 module.exports.sequelize = sequelize
 module.exports.Sequelize = Sequelize

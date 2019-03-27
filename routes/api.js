@@ -5,6 +5,7 @@ const userCtrl = require('../controllers/userController')
 const urlCtrl = require('../controllers/urlController')
 const fileCtrl = require('../controllers/fileController')
 const likeCtrl = require('../controllers/likeController')
+const recordCtrl = require('../controllers/recordController')
 
 
 router.get('/checkLog', userCtrl.checkLog);
@@ -48,5 +49,7 @@ router.post('/likes/like',likeCtrl.createLike)
 router.delete('/likes/unlike/url/:rid',likeCtrl.unlikeURL)
 router.delete('/likes/unlike/file/:fid',likeCtrl.unlikeFile)
 
+router.get('/records/home',recordCtrl.getHomeRecords)
+router.post('/records/record',recordCtrl.createRecord)
 
 module.exports = router;
