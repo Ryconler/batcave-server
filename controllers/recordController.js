@@ -19,7 +19,6 @@ class RecordController {
                         message: '缺少字段'
                     })
             }
-
         } catch (e) {
             res.status(500)
             res.json({
