@@ -10,7 +10,6 @@ const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
 
 const app = express();
-console.log(process.env.NODE_ENV);
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' ? 'http://batcave.jessezhu.cn' : 'http://localhost:8080',
     credentials: true,
