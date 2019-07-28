@@ -1,7 +1,8 @@
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const session = require('express-session');
+const session = require('express-session'),
+    MemoryStore = require('memorystore')(session);
 const logger = require('morgan');
 const cors = require('cors')
 
@@ -23,9 +24,12 @@ app.use(cookieParser());
 app.use(session({
     secret: 'Ryconler',
     resave: false,
+    store: new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+    }),
     saveUninitialized: true,
-    cookie : {
-        maxAge : 1000 * 60 * 30, // 设置 session 的有效时间，单位毫秒
+    cookie: {
+        maxAge: 1000 * 60 * 30, // 设置 session 的有效时间，单位毫秒
     }
 }));
 app.use(express.static(path.join(__dirname, 'public')));
