@@ -11,7 +11,7 @@ const apiRouter = require('./routes/api');
 
 const app = express();
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production' ? 'http://batcave.wzmxx.com' : 'http://localhost:8080',
+    origin: require('./config/index').baseURL,
     credentials: true,
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }))
