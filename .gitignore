@@ -18,3 +18,4 @@ uploads
 *.ntvs*
 *.njsproj
 *.sln
+.package-lock.json
